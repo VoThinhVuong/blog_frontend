@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Toggable'
 import './index.css'
 
 const App = () => {
@@ -14,11 +15,12 @@ const App = () => {
   const [msg, setMsg] = useState(null)
   const [type, setType] = useState('error')
 
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+      setBlogs( blogs.sort((a,b) => b.likes - a.likes) )
+    )
   }, [])
 
   useEffect(() => {
@@ -40,32 +42,38 @@ const App = () => {
     return(
       <>
         <h1>log in to application</h1>
-        <LoginForm 
-        username={username} 
-        setUsername={setUsername} 
-        password={password} 
-        setPassword={setPassword} 
-        setUser={setUser} 
-        setMsg={setMsg}
-        setType={setType}
+        <LoginForm
+          username={username}
+          setUsername={setUsername}
+          password={password}
+          setPassword={setPassword}
+          setUser={setUser}
+          setMsg={setMsg}
+          setType={setType}
         />
         <Notification message={msg} type={type} />
       </>
-  )} 
+    )}
+
+  const toggleVisibility = () => blogFormRef.current.toggleVisibility()
+
   return (
     <div>
 
-      
+
       {user.username} logged in <button name='logout' onClick={handleLogout}>logout</button>
-      
+
       <h2>blogs</h2>
 
       <Notification message={msg} type={type} />
 
-      <BlogForm blogs={blogs} setBlogs={setBlogs} setMsg={setMsg} setType={setType}/>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
-      
-      
+      <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
+        <BlogForm blogs={blogs} setBlogs={setBlogs} setMsg={setMsg} setType={setType} toggleVisibility={toggleVisibility}/>
+      </Togglable>
+
+      {blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} setMsg={setMsg} setType={setType} />)}
+
+
     </div>
   )
 }
