@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react'
 import blogService from '../services/blogs'
 
-const Blog = ({ blog, blogs, setBlogs, setMsg, setType, mockHandler }) => {
+const Blog = ({ blog, blogs, setBlogs, user, setMsg, setType, mockHandler }) => {
     const [visible,setVisible] = useState(false)
 
     const blogStyle = {
@@ -28,18 +28,24 @@ const Blog = ({ blog, blogs, setBlogs, setMsg, setType, mockHandler }) => {
         try{
             newBlog = await blogService.likeBlog(newBlog)
             newBlog['user'] = {
-                id: newBlog['user'],
-                name: JSON.parse(window.localStorage.getItem('loggedUser'))['name']
+                id: blog['user']['id'],
+                name: blog['user']['name'],
+                username: blog['user']['username']
             }
 
             const newBlogs = blogs.map(blog => blog.id === newBlog.id ? newBlog : blog)
             setBlogs(newBlogs.sort((a,b) => b.likes - a.likes))
         }
-        catch(error) {
-            // setType('error')
-            // setMsg(error.response.data.error)
-            // setTimeout(() => setMsg(null), 5000)
-            console.log(error)
+        catch(exception) {
+            try{
+                setType('error')
+                setMsg(exception.response.data.error)
+                setTimeout(() => setMsg(null), 5000)
+            }
+            catch(error) {
+                console.log(exception)
+            }
+
         }
     }
 
@@ -72,7 +78,7 @@ const Blog = ({ blog, blogs, setBlogs, setMsg, setType, mockHandler }) => {
                 {blog.url}
                 <div>likes {blog.likes} <button onClick={handleLike}>like</button></div>
                 {blog.user.name}
-                {blog.user.id === JSON.parse(window.localStorage.getItem('loggedUser'))['id'] ?
+                {blog.user.username === user.username ?
                     <div><button onClick={() => handleDelete()}>remove</button></div> : null}
 
             </div>

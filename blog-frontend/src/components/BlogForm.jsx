@@ -15,7 +15,8 @@ const BlogForm = ({ blogs, setBlogs, setMsg, setType, toggleVisibility, mockHand
             const newBlog = await blogService.postBlog({ author,title, url })
             newBlog['user'] = {
                 id: newBlog['user'],
-                name: JSON.parse(window.localStorage.getItem('loggedUser'))['name']
+                name: JSON.parse(window.localStorage.getItem('loggedUser'))['name'],
+                username: JSON.parse(window.localStorage.getItem('loggedUser'))['username']
             }
             //console.log(newBlog)
             const newBlogs = blogs.concat(newBlog)
@@ -29,14 +30,14 @@ const BlogForm = ({ blogs, setBlogs, setMsg, setType, toggleVisibility, mockHand
             setMsg(`a new blog '${newBlog.title}' by ${newBlog.author} added`)
             setTimeout(() => setMsg(null), 5000)
         }
-        catch(error) {
+        catch(exception) {
             try {
                 setType('error')
-                setMsg(error.response.data.error)
+                setMsg(exception.response.data.error)
                 setTimeout(() => setMsg(null), 5000)
             }
             catch(error) {
-                console.log(error)
+                console.log(exception)
             }
 
         }
@@ -46,10 +47,10 @@ const BlogForm = ({ blogs, setBlogs, setMsg, setType, toggleVisibility, mockHand
 
     return (
         <form onSubmit={handleBlog}>
-            <div>title: <input id='title' value={title} onChange={({ target }) => setTitle(target.value)}></input></div>
-            <div>author: <input id='author' value={author} onChange={({ target }) => setAuthor(target.value)}></input></div>
-            <div>url: <input id='url' value={url} onChange={({ target }) => setUrl(target.value)}></input></div>
-            <input type='Submit' value='create'></input>
+            <div>title: <input id='title' type='text' value={title} onChange={({ target }) => setTitle(target.value)}></input></div>
+            <div>author: <input id='author' type='text' value={author} onChange={({ target }) => setAuthor(target.value)}></input></div>
+            <div>url: <input id='url' type='text' value={url} onChange={({ target }) => setUrl(target.value)}></input></div>
+            <input id="create" type='Submit' value='create'></input>
         </form>
     )
 }
