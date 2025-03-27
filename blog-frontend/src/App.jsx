@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useDispatch, useSelector } from 'react-redux'
+import { initBlogs } from './reducers/blogReducer'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import Togglable from './components/Toggable'
+import BlogList from './components/BlogList'
 import './index.css'
 
 const App = () => {
@@ -16,11 +18,10 @@ const App = () => {
     const [type, setType] = useState('error')
 
     const blogFormRef = useRef()
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs( blogs.sort((a,b) => b.likes - a.likes) )
-        )
+        dispatch(initBlogs())
     }, [])
 
     useEffect(() => {
@@ -65,13 +66,13 @@ const App = () => {
 
             <h2>blogs</h2>
 
-            <Notification message={msg} type={type} />
+            <Notification/>
 
             <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
                 <BlogForm blogs={blogs} setBlogs={setBlogs} setMsg={setMsg} setType={setType} toggleVisibility={toggleVisibility}/>
             </Togglable>
 
-            {blogs.map(blog => <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} setMsg={setMsg} setType={setType} />)}
+            <BlogList user={user}/>
 
 
         </div>

@@ -28,7 +28,8 @@ const Togglable = forwardRef(({ buttonLabel, exitLabel='cancel', children }, ref
                 <button onClick={toggleVisibility}>{exitLabel}</button>
             </div>
         </div>
-    )})
+    )
+})
 
 Togglable.displayName = 'Togglable'
 
