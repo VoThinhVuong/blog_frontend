@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { showSuccess, showError } from '../reducers/notificationReducer'
 import blogService from '../services/blogs'
@@ -9,28 +9,22 @@ const BlogForm = ({ toggleVisibility }) => {
     const [title, setTitle] = useState('')
     const [url, setUrl] = useState('')
 
-    const blogs = useSelector(({ blogs }) => blogs)
     const dispatch = useDispatch()
 
     const handleBlog = async (event) => {
         event.preventDefault()
-        const newBlog = { author,title, url }
+        const newBlog = { author,title, url, likes: 0 }
 
         try{
             toggleVisibility()
-            newBlog['user'] = {
-                id: newBlog['user'],
-                name: JSON.parse(window.localStorage.getItem('loggedUser'))['name'],
-                username: JSON.parse(window.localStorage.getItem('loggedUser'))['username']
-            }
             setAuthor('')
             setTitle('')
             setUrl('')
-            dispatch(createBlog(newBlog))
-            showSuccess(`a new blog '${newBlog.title}' by ${newBlog.author} added`)
+            await dispatch(createBlog(newBlog))
+            dispatch(showSuccess(`a new blog '${newBlog.title}' by ${newBlog.author} added`))
         }
         catch(exception) {
-            showError(exception.error)
+            dispatch(showError(exception.response.data.error))
         }
     }
 

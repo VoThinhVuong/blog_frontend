@@ -4,10 +4,10 @@ const notiSlice = createSlice({
     name: 'notification',
     initialState: null,
     reducers: {
-        setNoti(state, action) {
+        setNotification(state, action) {
             return action.payload
         },
-        clearNoti(state, action) {
+        clearNotification(state, action) {
             return null
         }
     }
@@ -16,18 +16,18 @@ const notiSlice = createSlice({
 export const showSuccess = (content) => {
     return async dispatch => {
         const obj = { content, type: 'succ' }
-        dispatch(setNoti(content))
-        setTimeout(() => dispatch(clearNoti()), 5000)
+        dispatch(setNotification(obj))
+        setTimeout(() => dispatch(clearNotification()), 5000)
     }
 }
 
 export const showError = (content) => {
     return async dispatch => {
         const obj = { content, type: 'error' }
-        dispatch(setNoti(content))
-        setTimeout(() => dispatch(clearNoti()), 5000)
+        dispatch(setNotification(obj))
+        setTimeout(() => dispatch(clearNotification()), 5000)
     }
 }
 
-export const { setNoti, clearNoti } = notiSlice.reducer
+export const { setNotification, clearNotification } = notiSlice.actions
 export default notiSlice.reducer

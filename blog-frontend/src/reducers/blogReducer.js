@@ -39,7 +39,16 @@ export const deleteBlog = (blog) => {
 export const createBlog = (blog) => {
     return async dispatch => {
         const response = await blogService.postBlog(blog)
-        if(!response.error) dispatch(addBlog(blog))
+        if(!response.error) {
+            const newBlog = response
+            newBlog['user'] = {
+                id: newBlog['user'],
+                name: JSON.parse(window.localStorage.getItem('loggedUser'))['name'],
+                username: JSON.parse(window.localStorage.getItem('loggedUser'))['username']
+            }
+            dispatch(addBlog(newBlog))
+
+        }
     }
 }
 

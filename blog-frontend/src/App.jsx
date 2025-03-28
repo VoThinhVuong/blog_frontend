@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
+import { userLogout, setUser  } from './reducers/userReducer'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -10,13 +11,8 @@ import BlogList from './components/BlogList'
 import './index.css'
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [user, setUser] = useState(null)
-    const [msg, setMsg] = useState(null)
-    const [type, setType] = useState('error')
 
+    const user = useSelector(({ user }) => user)
     const blogFormRef = useRef()
     const dispatch = useDispatch()
 
@@ -26,33 +22,26 @@ const App = () => {
 
     useEffect(() => {
         const loggedUser = window.localStorage.getItem('loggedUser')
+        console.log(loggedUser)
         if (loggedUser) {
             const user = JSON.parse(loggedUser)
-            setUser(user)
+            dispatch(setUser(user))
             blogService.setToken(user.token)
         }
     }, [])
 
+    console.log(user)
+
     const handleLogout = () => {
-        blogService.setToken(null)
-        window.localStorage.removeItem('loggedUser')
-        setUser(null)
+        dispatch(userLogout())
     }
 
     if(user === null){
         return(
             <>
                 <h1>log in to application</h1>
-                <LoginForm
-                    username={username}
-                    setUsername={setUsername}
-                    password={password}
-                    setPassword={setPassword}
-                    setUser={setUser}
-                    setMsg={setMsg}
-                    setType={setType}
-                />
-                <Notification message={msg} type={type} />
+                <LoginForm />
+                <Notification />
             </>
         )}
 
@@ -69,7 +58,7 @@ const App = () => {
             <Notification/>
 
             <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
-                <BlogForm blogs={blogs} setBlogs={setBlogs} setMsg={setMsg} setType={setType} toggleVisibility={toggleVisibility}/>
+                <BlogForm toggleVisibility={toggleVisibility}/>
             </Togglable>
 
             <BlogList user={user}/>

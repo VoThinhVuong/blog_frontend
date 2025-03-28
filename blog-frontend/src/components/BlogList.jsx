@@ -43,30 +43,33 @@ const Blog = ({ blog, user, handleLike, handleDelete }) => {
         </div>
     )}
 
-const BlogList = ({ user }) => {
+const BlogList = () => {
 
     const blogs = useSelector(({ blogs }) => {
         return [...blogs].sort((a, b) => b.likes - a.likes)
     })
+
+    const user = useSelector(({ user }) => user)
+
     const dispatch = useDispatch()
 
     const handleLike = async (blog) => {
         try{
-            dispatch(likeBlog(blog))
+            await dispatch(likeBlog(blog))
         }
         catch(exception) {
-            dispatch(showError(exception.error))
+            dispatch(showError(exception.response.data.error))
         }
     }
 
     const handleDelete = async (blog) => {
         if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
             try{
-                dispatch(deleteBlog(blog))
-                dispatch(showSuccess(`deleted blog ${blog.title} by ${blog.author}`))
+                await dispatch(deleteBlog(blog))
+                dispatch(showSuccess(`Removed blog ${blog.title} by ${blog.author}`))
             }
             catch(exception) {
-                dispatch(showError(exception.error))
+                dispatch(showError(exception.response.data.error))
             }
         }
     }
