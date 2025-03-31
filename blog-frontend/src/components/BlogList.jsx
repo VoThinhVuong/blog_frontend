@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 
 const BlogList = ({ blogs }) => {
+    if(blogs.length === 0) return null
 
     const blogStyle = {
         paddingTop: 10,

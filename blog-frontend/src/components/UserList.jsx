@@ -1,14 +1,28 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { showError } from '../reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
+import userService from '../services/users'
 
-const UserList = ({ blogs }) => {
+const UserList = () => {
+    const [ users, setUsers ] = useState([])
 
-    const data = {}
+    const dispatch = useDispatch()
 
-    for (let blog of blogs){
-        if(!data[blog.user.name])
-            data[blog.user.name] = []
-        data[blog.user.name] = data[blog.user.name].concat(blog)
-    }
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const data = await userService.getAll() // Wait for the Promise to resolve
+                setUsers(data) // Update state with the resolved data
+            } catch (error) {
+                dispatch(showError(error.response.data.error))
+            }
+        }
+
+        fetchUsers()
+    }, [])
+
+    if(!users || users.length === 0) return null
 
     return(
         <div>
@@ -21,10 +35,8 @@ const UserList = ({ blogs }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {Object.entries(data).map(([name, blogs]) => <tr key={name}>
-                        <td><Link to={blogs[0].user.id}>{name}</Link></td>
-                        <td>{blogs.length}</td>
-                    </tr>
+                    {users.map(user =>
+                        <tr key={user.id}><td><Link to={`/users/${user.id}`}>{ user.name }</Link></td> <td>{ user.blogs.length }</td></tr>
                     )}
                 </tbody>
             </table>

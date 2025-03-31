@@ -45,8 +45,6 @@ const App = () => {
     const blogMatch = useMatch('/blogs/:id')
     const matchedBlog = blogMatch ? blogs.find(blog => blog.id === blogMatch.params.id) : null
 
-    if (blogs.length === 0) return null
-
 
     return (
         <div>
@@ -69,7 +67,7 @@ const App = () => {
             <Routes>
                 <Route path='/' element={<BlogList blogs={blogs}/>}/>
                 <Route path='/login' element={<LoginForm />}/>
-                <Route path='/users' element={<UserList blogs={blogs}/>}/>
+                <Route path='/users' element={<UserList />}/>
                 <Route path='/users/:id' element={<User currUser={user} blogs={blogs}/>} />
                 <Route path='/blogs/:id' element={<Blog blog={matchedBlog}/>} />
             </Routes>

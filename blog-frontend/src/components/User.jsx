@@ -2,16 +2,36 @@ import { Link, useParams } from 'react-router-dom'
 import { deleteBlog } from '../reducers/blogReducer'
 import { showError, showSuccess } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
+import { useState, useEffect } from 'react'
+import userService from '../services/users'
 
 const User = ({ currUser, blogs }) => {
 
+    const [ users, setUsers ] = useState([])
+ 
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const data = await userService.getAll() // Wait for the Promise to resolve
+                setUsers(data) // Update state with the resolved data
+            } catch (error) {
+                dispatch(showError(error.response.data.error))
+            }
+        }
+
+        fetchUsers()
+    }, [])
+
 
     const id = useParams().id
 
+    const user = users.filter(user => user.id === id)
+
     const Blogs = blogs.filter(blog => blog.user.id === id)
 
-    const name = Blogs[0].user.name
+    const name = user.name
 
     const handleDelete = async (blog) => {
         if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
@@ -24,6 +44,14 @@ const User = ({ currUser, blogs }) => {
             }
         }
     }
+
+    if(Blogs.length === 0) return(
+        <div>
+            <h2>{ name }</h2>
+            <strong>added blogs</strong>
+            <div>None</div>
+        </div>
+    )
 
     return(
         <div>
