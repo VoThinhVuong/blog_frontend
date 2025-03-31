@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import LoginForm from './LoginForm'
 
 const Navigation = () => {
     const user = useSelector(({ user }) => user)
@@ -16,6 +15,7 @@ const Navigation = () => {
             <Link to='/'>Home</Link>
             <Link to='/users'>Users</Link>
             {user ? <Link to={`/users/${user.id}`}>{user.name}</Link> : <Link to='/login'>Login</Link>}
+            {user ? null : <Link to='/register'>Register</Link>}
         </div>
     )
 }

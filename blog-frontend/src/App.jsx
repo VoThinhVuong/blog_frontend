@@ -4,9 +4,8 @@ import { initBlogs } from './reducers/blogReducer'
 import { userLogout, setUser  } from './reducers/userReducer'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
+import RegisterForm from './components/RegisterForm'
 import Notification from './components/Notification'
-import Togglable from './components/Toggable'
 import BlogList from './components/BlogList'
 import { Route, Routes, useMatch } from 'react-router-dom'
 import Navigation from './components/Navigation'
@@ -19,7 +18,6 @@ const App = () => {
 
     const user = useSelector(({ user }) => user)
     const blogs = useSelector(({ blogs }) => blogs)
-    const blogFormRef = useRef()
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -39,8 +37,6 @@ const App = () => {
         dispatch(userLogout())
     }
 
-    const toggleVisibility = () => blogFormRef.current.toggleVisibility()
-
 
     const blogMatch = useMatch('/blogs/:id')
     const matchedBlog = blogMatch ? blogs.find(blog => blog.id === blogMatch.params.id) : null
@@ -56,18 +52,13 @@ const App = () => {
                     :   null
             }
 
-            <h2>blogs</h2>
-
             <Notification/>
 
-            <Togglable buttonLabel={'create new blog'} ref={blogFormRef}>
-                <BlogForm toggleVisibility={toggleVisibility}/>
-            </Togglable>
-
             <Routes>
-                <Route path='/' element={<BlogList blogs={blogs}/>}/>
-                <Route path='/login' element={<LoginForm />}/>
-                <Route path='/users' element={<UserList />}/>
+                <Route path='/' element={<BlogList blogs={blogs}/>} />
+                <Route path='/register' element={<RegisterForm />} />
+                <Route path='/login' element={<LoginForm />} />
+                <Route path='/users' element={<UserList />} />
                 <Route path='/users/:id' element={<User currUser={user} blogs={blogs}/>} />
                 <Route path='/blogs/:id' element={<Blog blog={matchedBlog}/>} />
             </Routes>

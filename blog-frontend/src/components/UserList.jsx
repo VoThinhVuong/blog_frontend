@@ -30,7 +30,7 @@ const UserList = () => {
             <table>
                 <thead>
                     <tr>
-                        <th><strong>usernames</strong></th>
+                        <th><strong>names</strong></th>
                         <th><strong>blogs created</strong></th>
                     </tr>
                 </thead>

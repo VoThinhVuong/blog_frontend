@@ -1,25 +1,28 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { showError } from '../reducers/notificationReducer'
-import { userLogin } from '../reducers/userReducer'
-import { Link, useNavigate } from 'react-router-dom'
+import { showError, showSuccess } from '../reducers/notificationReducer'
+import { useNavigate, Link } from 'react-router-dom'
+import userService from '../services/users'
 
-const LoginForm = () => {
+const RegisterForm = () => {
     const [username, setUsername] = useState('')
+    const [name, setName] = useState('')
     const [password, setPassword] = useState('')
 
     const dispatch = useDispatch()
 
     const navigate = useNavigate()
 
-    const handleLogin = async (event) => {
+    const handleRegister = async (event) => {
         event.preventDefault()
 
         try {
-            await dispatch(userLogin( username, password))
+            await userService.register({ username, name, password })
             setUsername('')
             setPassword('')
-            navigate('/')
+            setName('')
+            navigate('/login')
+            dispatch(showSuccess('Account created! please login'))
         }
         catch(error) {
             dispatch(showError(error.response.data.error))
@@ -28,11 +31,15 @@ const LoginForm = () => {
 
     return (
         <div>
-            <h1>log in to application</h1>
-            <form onSubmit={handleLogin}>
+            <h1>Create an account</h1>
+            <form onSubmit={handleRegister}>
                 <div>
                     username
                     <input data-testid="Username" value={username} onChange={({ target }) => setUsername(target.value)} type='text' name='Username'></input>
+                </div>
+                <div>
+                    name
+                    <input data-testid="Name" value={name} onChange={({ target }) => setName(target.value)} type='text' name='Name'></input>
                 </div>
                 <div>
                     password
@@ -40,9 +47,9 @@ const LoginForm = () => {
                 </div>
                 <input type='Submit' value="login"/>
             </form>
-            <div>Register a new account <Link to='/register'>here</Link></div>
+            <div>Already have an account ? Login <Link to='/register'>here</Link></div>
         </div>
     )
 }
 
-export default LoginForm
+export default RegisterForm

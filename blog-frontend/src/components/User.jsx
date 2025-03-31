@@ -8,7 +8,7 @@ import userService from '../services/users'
 const User = ({ currUser, blogs }) => {
 
     const [ users, setUsers ] = useState([])
- 
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -29,9 +29,9 @@ const User = ({ currUser, blogs }) => {
 
     const user = users.filter(user => user.id === id)
 
-    const Blogs = blogs.filter(blog => blog.user.id === id)
+    if(user.length === 0) return null
 
-    const name = user.name
+    const Blogs = blogs.filter(blog => blog.user.id === id)
 
     const handleDelete = async (blog) => {
         if(window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)){
@@ -47,7 +47,7 @@ const User = ({ currUser, blogs }) => {
 
     if(Blogs.length === 0) return(
         <div>
-            <h2>{ name }</h2>
+            <h2>{ user[0].name }</h2>
             <strong>added blogs</strong>
             <div>None</div>
         </div>
@@ -55,7 +55,7 @@ const User = ({ currUser, blogs }) => {
 
     return(
         <div>
-            <h2>{ name }</h2>
+            <h2>{ user[0].name }</h2>
             <strong>added blogs</strong>
             <ul>
                 { Blogs.map(blog =>
