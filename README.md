@@ -1,3 +1,3 @@
 # blog_frontend
 
-ex done 7.10 - 7.13
+ex done 7.1 - 7.21
