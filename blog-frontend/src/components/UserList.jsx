@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { showError } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import userService from '../services/users'
+import { Container, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material'
 
 const UserList = () => {
     const [ users, setUsers ] = useState([])
@@ -25,22 +26,25 @@ const UserList = () => {
     if(!users || users.length === 0) return null
 
     return(
-        <div>
-            <h2>Users</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th><strong>names</strong></th>
-                        <th><strong>blogs created</strong></th>
-                    </tr>
-                </thead>
-                <tbody>
+        <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant='h1'>Users</Typography>
+            <Table >
+                <TableHead>
+                    <TableRow>
+                        <TableCell sx={{ textAlign: 'center' }}><strong><Typography>names</Typography></strong></TableCell>
+                        <TableCell sx={{ textAlign: 'center' }}><strong><Typography>blogs created</Typography></strong></TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
                     {users.map(user =>
-                        <tr key={user.id}><td><Link to={`/users/${user.id}`}>{ user.name }</Link></td> <td>{ user.blogs.length }</td></tr>
+                        <TableRow key={user.id}>
+                            <TableCell sx={{ textAlign: 'center' }}><Link to={`/users/${user.id}`}>{ user.name }</Link></TableCell>
+                            <TableCell sx={{ textAlign: 'center' }}>{ user.blogs.length }</TableCell>
+                        </TableRow>
                     )}
-                </tbody>
-            </table>
-        </div>
+                </TableBody>
+            </Table>
+        </Container>
     )
 }
 

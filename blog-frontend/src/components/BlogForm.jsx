@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
 import { showSuccess, showError } from '../reducers/notificationReducer'
-import blogService from '../services/blogs'
+import { Button, FormControl, Input, Paper } from '@mui/material'
 
 const BlogForm = ({ toggleVisibility }) => {
     const [author, setAuthor] = useState('')
@@ -31,11 +31,11 @@ const BlogForm = ({ toggleVisibility }) => {
 
 
     return (
-        <form onSubmit={handleBlog}>
-            <div>title: <input id='title' type='text' value={title} onChange={({ target }) => setTitle(target.value)}></input></div>
-            <div>author: <input id='author' type='text' value={author} onChange={({ target }) => setAuthor(target.value)}></input></div>
-            <div>url: <input id='url' type='text' value={url} onChange={({ target }) => setUrl(target.value)}></input></div>
-            <input id="create" type='Submit' value='create'></input>
+        <form onSubmit={handleBlog} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Paper elevation={3} sx={{ margin: '5px' }}>title: <Input id='title' type='text' value={title} onChange={({ target }) => setTitle(target.value)}></Input></Paper>
+            <Paper sx={{ margin: '5px' }}>author: <Input id='author' type='text' value={author} onChange={({ target }) => setAuthor(target.value)}></Input></Paper>
+            <Paper sx={{ margin: '5px' }}>url: <Input id='url' type='text' value={url} onChange={({ target }) => setUrl(target.value)}></Input></Paper>
+            <Button id="create" type='Submit' sx={{ margin: '5px' }}>create</Button>
         </form>
     )
 }

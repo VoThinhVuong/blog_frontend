@@ -15,7 +15,7 @@ const notiSlice = createSlice({
 
 export const showSuccess = (content) => {
     return async dispatch => {
-        const obj = { content, type: 'succ' }
+        const obj = { content, type: 'success' }
         dispatch(setNotification(obj))
         setTimeout(() => dispatch(clearNotification()), 5000)
     }

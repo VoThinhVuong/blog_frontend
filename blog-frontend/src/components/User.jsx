@@ -4,6 +4,7 @@ import { showError, showSuccess } from '../reducers/notificationReducer'
 import { useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react'
 import userService from '../services/users'
+import { Box, Button, Container, List, ListItem, Paper, Typography } from '@mui/material'
 
 const User = ({ currUser, blogs }) => {
 
@@ -46,28 +47,26 @@ const User = ({ currUser, blogs }) => {
     }
 
     if(Blogs.length === 0) return(
-        <div>
-            <h2>{ user[0].name }</h2>
-            <strong>added blogs</strong>
-            <div>None</div>
-        </div>
+        <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant='h2'>{ user[0].name }</Typography>
+            <Typography variant='h3'>added blogs</Typography>
+            <Typography>None</Typography>
+        </Container>
     )
 
     return(
-        <div>
-            <h2>{ user[0].name }</h2>
-            <strong>added blogs</strong>
-            <ul>
-                { Blogs.map(blog =>
-                    <li key={blog.id}>
-                        <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-                        {currUser && blog.user.id === currUser.id ?
-                            <div><button onClick={() => handleDelete(blog)}>remove</button></div>
-                            : null}
-                    </li>
-                )}
-            </ul>
-        </div>
+        <Container sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant='h2'>{ user[0].name }</Typography>
+            <Typography variant='h3'>added blogs:</Typography>
+            { Blogs.map(blog =>
+                <Paper key={blog.id} elevation={3} sx={{ margin: '20px', display: 'flex' ,width: '80%', justifyContent: 'space-evenly', alignItems: 'center', height: 30 }}>
+                    <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+                    {currUser && blog.user.id === currUser.id ?
+                        <Box><Button onClick={() => handleDelete(blog)}>remove</Button></Box>
+                        : null}
+                </Paper >
+            )}
+        </Container>
     )
 }
 

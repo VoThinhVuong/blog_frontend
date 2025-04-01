@@ -2,6 +2,7 @@ import { useDispatch } from 'react-redux'
 import { likeBlog, commentBlog } from '../reducers/blogReducer'
 import { showError } from '../reducers/notificationReducer'
 import { useState } from 'react'
+import { Box, Button, Container, Input, Link, Typography } from '@mui/material'
 
 const Blog = ({ blog }) => {
     const [ comment, setComment ] = useState('')
@@ -34,23 +35,23 @@ const Blog = ({ blog }) => {
 
     return(
 
-        <div className='Blog'>
-            <h2>{blog.title}</h2>
-            <a href={blog.url}>{blog.url}</a>
-            <div>{blog.likes} likes <button onClick={() => handleLike(blog)}>like</button></div>
-            <div>added by {blog.user.name}</div>
+        <Container className='Blog' sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant='h2' sx={{ margin: '10px ' }}>{blog.title}</Typography>
+            <Typography sx={{ margin: '10px ' }}>full blog at: <Link href={blog.url} target='_blank' rel='noreferrer'>{blog.url}</Link></Typography>
+            <Typography sx={{ margin: '10px ' }}>{blog.likes} likes <Button variant="outlined" onClick={() => handleLike(blog)}>like</Button ></Typography>
+            <Typography sx={{ margin: '10px ' }}>added by {blog.user.name}</Typography>
 
-            <h3>comments</h3>
+            <Typography variant='h3' sx={{ margin: '10px ' }}>comments (anonymous)</Typography>
 
             <form onSubmit={handleComment}>
-                <input type='text' onChange={(e) => setComment(e.target.value)} />
-                <input type='submit' value='add comment' />
+                <Input type='text' value={comment} onChange={(e) => setComment(e.target.value)} />
+                <Input type='submit' value='add comment' />
             </form>
 
             <ul>
-                {blog.length !== 0 ? blog.comments.map(comment => <li key={comment}>{comment}</li>) : null}
+                {blog.length !== 0 ? blog.comments.map(comment => <li key={comment}><Typography>{comment}</Typography></li>) : null}
             </ul>
-        </div>
+        </Container>
     )
 }
 

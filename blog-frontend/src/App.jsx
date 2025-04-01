@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { initBlogs } from './reducers/blogReducer'
-import { userLogout, setUser  } from './reducers/userReducer'
+import { setUser  } from './reducers/userReducer'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import RegisterForm from './components/RegisterForm'
@@ -12,6 +12,7 @@ import Navigation from './components/Navigation'
 import UserList from './components/UserList'
 import User from './components/User'
 import Blog from './components/Blog'
+import { Button, Container, Typography } from '@mui/material'
 import './index.css'
 
 const App = () => {
@@ -33,9 +34,6 @@ const App = () => {
         }
     }, [dispatch])
 
-    const handleLogout = () => {
-        dispatch(userLogout())
-    }
 
 
     const blogMatch = useMatch('/blogs/:id')
@@ -43,15 +41,8 @@ const App = () => {
 
 
     return (
-        <div>
+        <Container sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
             <Navigation />
-
-            {
-                user ?
-                    <div>{user.username} logged in <button name='logout' onClick={handleLogout}>logout</button></div>
-                    :   null
-            }
-
             <Notification/>
 
             <Routes>
@@ -63,7 +54,7 @@ const App = () => {
                 <Route path='/blogs/:id' element={<Blog blog={matchedBlog}/>} />
             </Routes>
 
-        </div>
+        </Container>
     )
 }
 
